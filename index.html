@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Countdown</title>
+
+<style>
+    body {
+        font-family: 'Georgia', serif;
+        background: radial-gradient(circle at top, #0b0c2a, #1a1a40);
+        color: #cce6ff;
+        text-align: center;
+        padding-top: 60px;
+        overflow: hidden;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        letter-spacing: 1.2px;
+        color: #66ccff;
+        text-shadow: 0 0 10px #66ccff, 0 0 20px #3399ff;
+    }
+
+    #timer {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-top: 20px;
+        color: #66ccff;
+        text-shadow: 0 0 15px #3399ff;
+    }
+
+    .sub {
+        font-size: 1.3rem;
+        opacity: 0.85;
+        margin-bottom: 25px;
+        padding: 0 20px;
+        line-height: 1.5;
+        color: #99ddff;
+    }
+
+    .btn-pdf {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 14px 30px;
+        font-size: 1.2rem;
+        color: #fff;
+        background: linear-gradient(45deg, #3399ff, #66ccff, #3399ff);
+        border: none;
+        border-radius: 50px;
+        cursor: not-allowed;
+        opacity: 0.4;
+        text-decoration: none;
+        box-shadow: 0 0 15px rgba(51, 153, 255, 0.5);
+        transition: all 0.4s ease;
+        position: relative;
+    }
+
+    .btn-pdf.enabled {
+        cursor: pointer;
+        opacity: 1;
+        box-shadow: 0 0 25px rgba(102, 204, 255, 0.9), 0 0 50px rgba(51, 153, 255, 0.5);
+        animation: pulse 1.5s infinite;
+    }
+
+    .btn-pdf.enabled:hover {
+        background: linear-gradient(45deg, #66ccff, #3399ff, #66ccff);
+    }
+
+    @keyframes pulse {
+        0% { box-shadow: 0 0 20px rgba(102, 204, 255, 0.7), 0 0 40px rgba(51, 153, 255, 0.4); }
+        50% { box-shadow: 0 0 30px rgba(102, 204, 255, 1), 0 0 60px rgba(51, 153, 255, 0.7); }
+        100% { box-shadow: 0 0 20px rgba(102, 204, 255, 0.7), 0 0 40px rgba(51, 153, 255, 0.4); }
+    }
+
+    .sagittarius {
+        font-size: 5rem;
+        color: #66ccff;
+        text-shadow: 0 0 20px #3399ff, 0 0 40px #66ccff;
+        margin-bottom: 20px;
+    }
+
+    /* Stelle scintillanti */
+    .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: white;
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: twinkle 2s infinite alternate;
+    }
+
+    @keyframes twinkle {
+        0% { opacity: 0.2; transform: translateY(0) translateX(0); }
+        50% { opacity: 1; transform: translateY(-2px) translateX(2px); }
+        100% { opacity: 0.2; transform: translateY(0) translateX(0); }
+    }
+</style>
+</head>
+<body>
+
+<div class="sagittarius">♐</div>
+<h1>bello tutto, bello anche l'ascendente. Qua tocca aspettare.</h1>
+<div class="sub">Il conto alla rovescia termina alle 00:30 del 19 dicembre. Preparati per la sorpresa cosmica!</div>
+
+<div id="timer"></div>
+
+<a href="buono-regalo.pdf" target="_blank" id="pdfBtn" class="btn-pdf">Apri il tuo regalo 🎁</a>
+
+<script>
+    // Data di scadenza: 19 dicembre 2025 ore 00:30
+    const targetDate = new Date("2025-12-19T00:30:00");
+
+    const pdfBtn = document.getElementById("pdfBtn");
+    const timerDisplay = document.getElementById("timer");
+
+    function pad(n) {
+        return n.toString().padStart(2, '0');
+    }
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const diff = targetDate.getTime() - now;
+
+        if (diff <= 0) {
+            timerDisplay.innerHTML = "È il momento! 🎉";
+            clearInterval(counter);
+            pdfBtn.classList.add("enabled");
+            pdfBtn.style.cursor = "pointer";
+            return;
+        }
+
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timerDisplay.innerHTML = `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+    }
+
+    pdfBtn.addEventListener("click", function(event) {
+        if (!pdfBtn.classList.contains("enabled")) {
+            event.preventDefault();
+            alert("Il tuo regalo sarà disponibile solo alla fine del countdown!");
+        }
+    });
+
+    updateTimer();
+    const counter = setInterval(updateTimer, 1000);
+
+    // Genera stelle casuali
+    const numStars = 50;
+    for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.top = Math.random() * window.innerHeight + 'px';
+        star.style.left = Math.random() * window.innerWidth + 'px';
+        star.style.width = star.style.height = Math.random() * 3 + 1 + 'px';
+        star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        document.body.appendChild(star);
+    }
+</script>
+
+</body>
+</html>
